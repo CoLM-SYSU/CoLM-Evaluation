@@ -1,0 +1,89 @@
+&general
+  casename=cama-flood-test
+  casedir=/tera04/zhwei/colm/CoLM202X/test
+  compare_tres  = month 
+  compare_tzone = 0      # time zone 8:Beijing time
+  compare_gres  = 0.25     # Degree; only work for self.ref_data_type != 'stn' and self.sim_data_type != 'stn':
+  syear=1990               # must be integer
+  eyear=2017               # must be integer
+  min_year=1.0 
+  max_lat=90.0 
+  min_lat=-60.0
+  max_lon=180.0             
+  min_lon=-180.0
+  reference_nml = ./ref.nml
+  simulation_nml = ./sim.nml
+  num_cores=10 #-1 # how many core will be used in Parallel computing
+  evaluation_only = False
+/
+
+&evaluation_items
+  #========================Evaluation_Items====================
+  #*******************Ecosystem and Carbon Cycle****************
+    Biomass=False
+    LAI=False
+    BurnedArea=False
+    Global_Net_Ecosystem_Carbon_Balance=False
+    Gross_Primary_Productivity=False
+    Ecosystem_Respiration=False
+    Soil_Carbon=False
+    Nitrogen_Fixation=False
+  #**************************************************************
+
+  #*******************      Hydrology Cycle      ****************
+    Evapotranspiration=False
+    Transpiration=False
+    Interception=False
+    Soil_Evaporation=False
+    Soil_Moisture=False
+    Runoff=False
+    Inundation=False
+    Terrestrial_Water_Storage_Anomaly=False
+    Snow_Water_Equivalent=False
+    Permafrost=False
+  #**************************************************************
+
+  #*******************  Radiation and Energy Cycle  *************
+    Albedo=False
+    Surface_Upward_SW_Radiation=False
+    Surface_Upward_LW_Radiation=False
+    Surface_Net_SW_Radiation=False
+    Surface_Net_LW_Radiation=False
+    Surface_Net_Radiation= False
+    Ground_Heat_Flux= False
+    Latent_Heat= False
+    Sensible_Heat= False
+    Streamflow = True
+  #****************************************************************
+
+  #*******************         Forcings      **********************
+    Diurnal_Temperature_Range=False
+    Diurnal_Max_Temperature=False
+    Diurnal_Min_Temperature=False
+    Surface_Downward_SW_Radiation=False
+    Surface_Downward_LW_Radiation=False
+    Surface_Relative_Humidity=False
+    Precipitation=False
+    Surface_Air_Temperature=False
+  #****************************************************************
+#================================================================
+/
+
+&metrics
+pc_bias=False           # Percent Bias
+apb=False               # Absolute Percent Bias
+RMSE=True               # Root Mean Squared Error
+ubRMSE=False            # Unbiased Root Mean Squared Error
+mae=False               # Mean Absolute Error
+bias=False              # Bias
+L=False                 # Likelihood
+correlation=True        # correlation coefficient
+correlation_R2=True     # correlation coefficient R2
+NSE=True                # Nash Sutcliffe efficiency coefficient
+KGE=True                # Kling-Gupta Efficiency
+KGESS=True              # Normalized Kling-Gupta Efficiency
+index_agreement=False   # Index of agreement
+kappa_coeff=False       # Kappa coefficient
+nBiasScore=False        # Bias Score from ILAMB
+nRMSEScore=False        # RMSE Score from ILAMB
+/
