@@ -4,7 +4,7 @@ import sys
 import xarray as xr
 import numpy as np
 
-class metrics_geo:
+class scores_geo:
     def __init__(self):
         
         """
@@ -25,7 +25,7 @@ class metrics_geo:
         KGE                 : Kling-Gupta Efficiency
         
         """
-        self.name = 'metrics'
+        self.name = 'scores'
         self.version = '0.1'
         self.release = '0.1'
         self.date = 'Mar 2023'
@@ -33,165 +33,6 @@ class metrics_geo:
         np.seterr(all='ignore')  
         # Turn off only the RuntimeWarning
         #np.seterr(divide='ignore', invalid='ignore', over='ignore', under='ignore')
-
-
-
-    def pc_bias(self,s,o):
-        """
-        Percent Bias
-        input:
-            s: simulated
-            o: observed
-        output:
-            pc_bias: percent bias
-        """
-        #100.0*sum(self.s-self.o)/sum(self.o)
-        #print(100.0*(s-o).sum(dim='time')/(o.sum(dim='time')))
-        return (100.0*(s-o).sum(dim='time')/(o.sum(dim='time')))
-
-    def apb(self,s,o):
-        """
-        Absolute Percent Bias
-        input:
-            s: simulated
-            o: observed
-        output:
-            apb_bias: absolute percent bias
-        """
-        #100.0*sum(abs(self.s-self.o))/sum(self.o)
-        k1=s-o
-        k1.vaules=np.abs(k1.values)
-        apb=100.0*k1.sum(dim='time')/(o.sum(dim='time'))
-        return apb
-
-    def RMSE(self,s,o):
-        """
-        Root Mean Squared Error
-        input:
-            s: simulated
-            o: observed
-        output:
-            rmses: root mean squared error
-        """
-        #np.sqrt(np.mean((self.s-self.o)**2))
-        var=((s-o)**2).mean(dim='time')
-        return var
-    
-    def ubRMSE(self,s,o):
-        """
-        Unbiased Root Mean Squared Error
-        input:
-            s: simulated
-            o: observed
-        output:
-            ubrmses: unbiased root mean squared error
-        """
-        # np.sqrt(np.mean((self.s-np.mean(self.o)-self.o)**2))
-        var=(((s-o.mean(dim='time')-o)**2).mean(dim='time') )**0.5
-        return var
-
-    def mae(self,s,o):
-        """
-        Mean Absolute Error
-        input:
-            s: simulated
-            o: observed
-        output:
-            maes: mean absolute error
-        """
-        #np.mean(abs(self.s-self.o))
-        k1=s-o
-        k1.vaules=np.abs(k1.values) 
-        var=k1.mean(dim='time')
-        return var
-
-    def bias(self,s,o):
-        """
-        Bias
-        input:
-            s: simulated
-            o: observed
-        output:
-            bias: bias
-        """
-        #np.mean(s-o)
-        var=(s-o).mean(dim='time')
-        return var
-
-    def L(self,s,o,N=5):
-        """
-        Likelihood
-        input:
-            s: simulated
-            o: observed
-        output:
-            L: likelihood
-        """
-        #np.exp(-N*sum((self.s-self.o)**2)/sum((self.o-np.mean(self.o))**2))
-        tmp1=((o-o.mean(dim='time'))**2).sum(dim='time')
-        tmp2=-N*(((s-o)**2).sum(dim='time'))
-        var=np.exp(tmp2/tmp1)
-        return var 
-
-    def correlation(self,s,o):
-        """
-        correlation coefficient
-        input:
-            s: simulated
-            o: observed
-        output:
-            correlation: correlation coefficient
-        """
-        corr=xr.corr(s,o,dim=['time'])
-      
-        return corr
-
-    def correlation_R2(self,s,o):
-        """
-        correlation coefficient R2
-        input:
-            s: simulated
-            o: observed
-        output:
-            correlation: correlation coefficient
-        """
-
-        return xr.corr(s,o,dim=['time'])**2
-    
-    def NSE(self,s,o):
-        """
-        Nash Sutcliffe efficiency coefficient
-        input:
-            s: simulated
-            o: observed
-        output:
-            nse: Nash Sutcliffe efficient coefficient
-        """
-        #1 - sum((s-o)**2)/sum((o-np.mean(o))**2)
-        _tmp1=((o-o.mean(dim='time'))**2).sum(dim='time')
-        _tmp2=((s-o)**2).sum(dim='time')
-        var=1-_tmp2/_tmp1
-        return var
-    
-    def KGE(self,s,o):
-        """
-        Kling-Gupta Efficiency
-        input:
-            s: simulated
-            o: observed
-        output:
-            kge: Kling-Gupta Efficiency
-            cc: correlation
-            alpha: ratio of the standard deviation
-            beta: ratio of the mean
-        """
-        cc  = self.correlation(s,o)
-        alpha =s.std(dim='time')/o.std(dim='time')
-        #alpha = np.std(s)/np.std(o)
-        beta = s.mean(dim='time')/o.mean(dim='time')
-        #beta = np.sum(s)/np.sum(o)
-        kge = 1- ( (cc-1)**2 + (alpha-1)**2 + (beta-1)**2 )**0.5
-        return kge   #, cc, alpha, beta
 
     def KGESS(self,s,o):
         """
@@ -211,76 +52,6 @@ class metrics_geo:
         kgess=(kge-(-0.41))/(1.0-(-0.41))
         return kgess   #, cc, alpha, beta
 
-    def index_agreement(self,s,o):
-        """
-	    index of agreement
-	    input:
-            s: simulated
-            o: observed
-        output:
-            ia: index of agreement
-        """
-        _tmp1 = ((o-s)**2).sum(dim='time')
-        _tmp2 =((np.abs(s-o.mean(dim='time'))+np.abs(o-o.mean(dim='time')))**2).sum(dim='time')
-        ia = 1 - _tmp1/_tmp2
-        return ia.squeeze()
-
-    def kappa_coeff(self,s,o):
-        s = (s).astype(int)
-        o = (o).astype(int)
-        n = len(s)
-        foo1 = np.unique(s)
-        foo2 = np.unique(o)
-        unique_data = np.unique(np.hstack([foo1,foo2]).flatten())
-        self.unique_data = unique_data
-        kappa_mat = np.zeros((len(unique_data),len(unique_data)))
-        ind1 = np.empty(n, dtype=int)
-        ind2 = np.empty(n, dtype=int)
-        for i in range(len(unique_data)):
-            ind1[s==unique_data[i]] = i
-            ind2[o==unique_data[i]] = i
-        for i in range(n):
-            kappa_mat[ind1[i],ind2[i]] += 1
-        self.kappa_mat = kappa_mat
-        # compute kappa coefficient
-        # formula for kappa coefficient taken from
-        # http://adorio-research.org/wordpress/?p=2301
-        tot = np.sum(kappa_mat)
-        Pa = np.sum(np.diag(kappa_mat))/tot
-        PA = np.sum(kappa_mat,axis=0)/tot
-        PB = np.sum(kappa_mat,axis=1)/tot
-        Pe = np.sum(PA*PB)
-        kappa_coeff = (Pa-Pe)/(1-Pe)
-        '''
-        def kappa_figure(self,fname,data,data_name):
-            data = np.array(data)
-            data = data.astype(int)
-
-            try:
-                self.kappa_mat
-            except:
-                self.kappa_coeff()
-
-            kappa_mat = self.kappa_coeff()
-            unique_data = self.unique_data
-
-            tick_labels = []
-            for i in range(len(unique_data)):
-                unique_data[i] == data
-                tick_labels.append(data_name[find(data==unique_data[i])])
-
-            plt.subplots_adjust(left=0.3, top=0.8)
-            plt.imshow(kappa_mat, interpolation='nearest',origin='upper')
-            #plt.gca().tick_top()
-            plt.xticks(range(len(unique_data)),tick_labels, rotation='vertical')
-            plt.yticks(range(len(unique_data)),tick_labels)
-            #yticks(range(0,25),np.linspace(0,3,13))
-            plt.colorbar(shrink = 0.8)
-            #plt.title(vi_name[j])
-            plt.savefig(fname)
-            plt.close()
-        '''
-        return kappa_mat, kappa_coeff
 
     def nBiasScore(self,s,o):
         """
@@ -468,7 +239,6 @@ class metrics_geo:
         return ETS
 
     def TS(self,s,o, threshold=0.1):
-
         '''
         func: 计算TS评分: TS = hits/(hits + falsealarms + misses) 
               alias: TP/(TP+FP+FN)
@@ -482,10 +252,7 @@ class metrics_geo:
         TS：风险评分ThreatScore;
 
         CSI:  critical success index 临界成功指数;
-
         两者的物理概念完全一致。
-
-        如下图：y_pre_1为预测的降水区( >= threshold，下同)，y_obs_1为观测的降水区，hits为两者交界区，
         '''
 
         hits, misses, falsealarms, correctnegatives = self.prep_clf( s,o,threshold=threshold)
@@ -545,7 +312,6 @@ class metrics_geo:
             obs: 观测值，即真实值；
             pre: 预测值；
             threshold: 阈值，判别正负样本的阈值,默认0.1,气象上默认格点 >= 0.1才判定存在降水。
-
         returns:
             dtype: float
         '''
@@ -561,7 +327,6 @@ class metrics_geo:
             obs: 观测值，即真实值；
             pre: 预测值；
             threshold: 阈值，判别正负样本的阈值,默认0.1,气象上默认格点 >= 0.1才判定存在降水。
-
         returns:
             dtype: float
         '''
@@ -579,7 +344,7 @@ class metrics_geo:
 
         return 2 * ((precision_socre * recall_score) / (precision_socre + recall_score))
 
-class metrics_stn:
+class scores_stn:
     def __init__(self,s= np.array([]),o= np.array([])):
         
         """
@@ -600,7 +365,7 @@ class metrics_stn:
         KGE                 : Kling-Gupta Efficiency
         
         """
-        self.name = 'metrics'
+        self.name = 'scores'
         self.version = '0.1'
         self.release = '0.1'
         self.date = 'Mar 2023'
@@ -623,142 +388,7 @@ class metrics_stn:
         np.seterr(all='ignore')  #
         # Turn off only the RuntimeWarning
         #np.seterr(divide='ignore', invalid='ignore', over='ignore', under='ignore')
-    
-    def pc_bias(self):
-        """
-        Percent Bias
-        input:
-            s: simulated
-            o: observed
-        output:
-            pc_bias: percent bias
-        """
-        return 100.0*sum(self.s-self.o)/sum(self.o)
 
-    def apb(self):
-        """
-        Absolute Percent Bias
-        input:
-            s: simulated
-            o: observed
-        output:
-            apb_bias: absolute percent bias
-        """
-        return 100.0*sum(abs(self.s-self.o))/sum(self.o)
-
-    def rmse(self):
-        """
-        Root Mean Squared Error
-        input:
-            s: simulated
-            o: observed
-        output:
-            rmses: root mean squared error
-        """
-        return np.sqrt(np.mean((self.s-self.o)**2))
-    
-    def ubRMSE(self):
-        """
-        Unbiased Root Mean Squared Error
-        input:
-            s: simulated
-            o: observed
-        output:
-            ubrmses: unbiased root mean squared error
-        """
-        return np.sqrt(np.mean((self.s-np.mean(self.o)-self.o)**2))
-
-    def mae(self):
-        """
-        Mean Absolute Error
-        input:
-            s: simulated
-            o: observed
-        output:
-            maes: mean absolute error
-        """
-        return np.mean(abs(self.s-self.o))
-
-    def bias(self):
-        """
-        Bias
-        input:
-            s: simulated
-            o: observed
-        output:
-            bias: bias
-        """
-        return np.mean(self.s-self.o)
-
-    def L(self, N=5):
-        """
-        Likelihood
-        input:
-            s: simulated
-            o: observed
-        output:
-            L: likelihood
-        """
-        return np.exp(-N*sum((self.s-self.o)**2)/sum((self.o-np.mean(self.o))**2))
-
-    def correlation(self):
-        """
-        correlation coefficient
-        input:
-            s: simulated
-            o: observed
-        output:
-            correlation: correlation coefficient
-        """
-        if self.s.size == 0:
-            corr = np.NaN
-        else:
-            corr = np.corrcoef(self.o, self.s)[0,1]
-        return corr
-    
-    def corrlation_R2(self):
-        """
-        correlation coefficient R2
-        input:
-            s: simulated
-            o: observed
-        output:
-            correlation: correlation coefficient
-        """
-        if self.s.size == 0:
-            corr = np.NaN
-        else:
-            corr = np.corrcoef(self.o, self.s)[0,1]
-        return corr**2
-    
-    def NSE(self):
-        """
-        Nash Sutcliffe efficiency coefficient
-        input:
-            s: simulated
-            o: observed
-        output:
-            nse: Nash Sutcliffe efficient coefficient
-        """
-        return 1 - sum((self.s-self.o)**2)/sum((self.o-np.mean(self.o))**2)
-    
-    def KGE(self):
-        """
-        Kling-Gupta Efficiency
-        input:
-            s: simulated
-            o: observed
-        output:
-            kge: Kling-Gupta Efficiency
-            cc: correlation
-            alpha: ratio of the standard deviation
-            beta: ratio of the mean
-        """
-        cc  = self.correlation()
-        alpha = np.std(self.s)/np.std(self.o)
-        beta = np.sum(self.s)/np.sum(self.o)
-        kge = 1- np.sqrt( (cc-1)**2 + (alpha-1)**2 + (beta-1)**2 )
-        return kge   #, cc, alpha, beta
 
     def KGESS(self):
         """
@@ -780,76 +410,6 @@ class metrics_stn:
         kge = 1- np.sqrt( (cc-1)**2 + (alpha-1)**2 + (beta-1)**2 )
         kgess=(kge-(-0.41))/(1.0-(-0.41))
         return kgess   #, cc, alpha, beta
-
-    def index_agreement(self):
-        """
-	    index of agreement
-	    input:
-            s: simulated
-            o: observed
-        output:
-            ia: index of agreement
-        """
-        ia = 1 -(np.sum((self.o-self.s)**2))/(np.sum(
-    			(np.abs(self.s-np.mean(self.o))+np.abs(self.o-np.mean(self.o)))**2))
-        return ia
-
-    def kappa_coeff(self):
-        s = (self.s).astype(int)
-        o = (self.o).astype(int)
-        n = len(s)
-        foo1 = np.unique(s)
-        foo2 = np.unique(o)
-        unique_data = np.unique(np.hstack([foo1,foo2]).flatten())
-        self.unique_data = unique_data
-        kappa_mat = np.zeros((len(unique_data),len(unique_data)))
-        ind1 = np.empty(n, dtype=int)
-        ind2 = np.empty(n, dtype=int)
-        for i in range(len(unique_data)):
-            ind1[s==unique_data[i]] = i
-            ind2[o==unique_data[i]] = i
-        for i in range(n):
-            kappa_mat[ind1[i],ind2[i]] += 1
-        self.kappa_mat = kappa_mat
-        # compute kappa coefficient
-        # formula for kappa coefficient taken from
-        # http://adorio-research.org/wordpress/?p=2301
-        tot = np.sum(kappa_mat)
-        Pa = np.sum(np.diag(kappa_mat))/tot
-        PA = np.sum(kappa_mat,axis=0)/tot
-        PB = np.sum(kappa_mat,axis=1)/tot
-        Pe = np.sum(PA*PB)
-        kappa_coeff = (Pa-Pe)/(1-Pe)
-        '''
-        def kappa_figure(self,fname,data,data_name):
-            data = np.array(data)
-            data = data.astype(int)
-
-            try:
-                self.kappa_mat
-            except:
-                self.kappa_coeff()
-
-            kappa_mat = self.kappa_coeff()
-            unique_data = self.unique_data
-
-            tick_labels = []
-            for i in range(len(unique_data)):
-                unique_data[i] == data
-                tick_labels.append(data_name[find(data==unique_data[i])])
-
-            plt.subplots_adjust(left=0.3, top=0.8)
-            plt.imshow(kappa_mat, interpolation='nearest',origin='upper')
-            #plt.gca().tick_top()
-            plt.xticks(range(len(unique_data)),tick_labels, rotation='vertical')
-            plt.yticks(range(len(unique_data)),tick_labels)
-            #yticks(range(0,25),np.linspace(0,3,13))
-            plt.colorbar(shrink = 0.8)
-            #plt.title(vi_name[j])
-            plt.savefig(fname)
-            plt.close()
-        '''
-        return kappa_mat, kappa_coeff
 
     def nBiasScore(self):
         """

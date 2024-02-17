@@ -1,0 +1,72 @@
+&general
+  Latent_Heat_ref_source             =  FLUXCOM
+  Sensible_Heat_ref_source           =  FLUXCOM
+  Runoff_ref_source                  =  LORA
+  Surface_Net_Radiation_ref_source   =  CERESed4.1
+/
+
+
+&Latent_Heat
+#FLUXCOM
+  FLUXCOM_timezone     =  0    #UTC+0: if Local, read from List file
+  FLUXCOM_data_type    =  geo  
+  FLUXCOM_data_groupby =  Single   
+  FLUXCOM_dir          =  /tera06/zhwei/Validation_Data/geo_ref/Latent_Heat/FLUXCOM
+  FLUXCOM_varname      =  le 
+  FLUXCOM_tim_res      =  Month         #Day or Month
+  FLUXCOM_geo_res      =  0.5
+  FLUXCOM_suffix       =  le
+  FLUXCOM_prefix       =   
+  FLUXCOM_syear        =  1980
+  FLUXCOM_eyear        =  2014
+/
+
+&Sensible_Heat
+#FLUXCOM
+  FLUXCOM_timezone     =  0    #UTC+0: if Local, read from List file
+  FLUXCOM_data_type    =  geo  
+  FLUXCOM_data_groupby =  Single   
+  FLUXCOM_dir          =  /tera06/zhwei/Validation_Data/geo_ref/Sensible_Heat/FLUXCOM
+  FLUXCOM_varname      =  sh 
+  FLUXCOM_tim_res      =  Month         #Day or Month
+  FLUXCOM_geo_res      =  0.5
+  FLUXCOM_suffix       =  sh
+  FLUXCOM_prefix       =   
+  FLUXCOM_syear        =  1980
+  FLUXCOM_eyear        =  2014              
+/
+###################################################################################
+
+
+&Runoff
+#LORA
+  LORA_dir         =  /tera06/zhwei/Validation_Data/geo_ref/Runoff/LORA
+  LORA_data_type   =  geo
+  LORA_tim_res     =  Month         #Day or Month
+  LORA_geo_res     =  0.5
+  LORA_data_groupby=  Single
+  LORA_suffix      =  
+  LORA_prefix      =  LORA
+  LORA_syear       =  1980
+  LORA_eyear       =  2012
+  LORA_figplot     =  True
+  LORA_varname     =  mrro    
+/
+
+
+&Surface_Net_Radiation
+#CERESed4.1
+  CERESed4.1_dir         =  /tera06/zhwei/Validation_Data/geo_ref/Surface_Net_Radiation/CERESed4.1
+  CERESed4.1_tim_res     =  Month         #Hour, Day or Month,Year,Climatology
+  CERESed4.1_data_groupby=  Single
+  CERESed4.1_data_type   =  geo
+  CERESed4.1_geo_res     =  30min
+  CERESed4.1_suffix      =  rns
+  CERESed4.1_prefix      =  
+  CERESed4.1_syear       =  2000
+  CERESed4.1_eyear       =  2018
+  CERESed4.1_figplot     =  True
+  CERESed4.1_varname     =  rns           
+/
+
+

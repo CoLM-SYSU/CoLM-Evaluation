@@ -33,7 +33,7 @@ class DatasetHandler:
         processor = ReferenceDatasetHandler(self)
         processor.process()
         
-    def process_simulation(self):
+    def process_simulation(self): 
         processor = SimulationDatasetHandler(self)
         processor.process()
     def run(self):
@@ -206,15 +206,15 @@ class ReferenceDatasetHandler:
         #refx0['lon'] = xr.where(refx0.lon > 180, refx0.lon - 360, refx0.lon)
 
         lon_new = xr.DataArray(
-                data=np.arange(self.min_lon+self.compare_gres/2, self.max_lon, self.compare_gres),
+                data=np.arange(self.min_lon+self.compare_geo_res/2, self.max_lon, self.compare_geo_res),
                 dims=('lon',),
-                coords={'lon': np.arange(self.min_lon+self.compare_gres/2, self.max_lon, self.compare_gres)},
+                coords={'lon': np.arange(self.min_lon+self.compare_geo_res/2, self.max_lon, self.compare_geo_res)},
                 attrs={'units': 'degrees_east', 'long_name': 'longitude'}
                 )
         lat_new = xr.DataArray(
-                data=np.arange(self.min_lat+self.compare_gres/2, self.max_lat, self.compare_gres),
+                data=np.arange(self.min_lat+self.compare_geo_res/2, self.max_lat, self.compare_geo_res),
                 dims=('lat',),
-                coords={'lat': np.arange(self.min_lat+self.compare_gres/2, self.max_lat, self.compare_gres)},
+                coords={'lat': np.arange(self.min_lat+self.compare_geo_res/2, self.max_lat, self.compare_geo_res)},
                 attrs={'units': 'degrees_north', 'long_name': 'latitude'}
                 )
         new_grid = xr.Dataset({'lon': lon_new, 'lat': lat_new})
@@ -238,10 +238,10 @@ class ReferenceDatasetHandler:
         else:
             sys.exit(1)
 
-        # Resample based on compare_tres
-        compare_tres_map = {'month': '1M', 'day': '1D', 'hour': '1H', 'year':'1Y'}
-        if self.compare_tres.lower() in compare_tres_map:
-            refx = refx.resample(time=compare_tres_map[self.compare_tres.lower()]).mean()
+        # Resample based on compare_tim_res
+        compare_tim_res_map = {'month': '1M', 'day': '1D', 'hour': '1H', 'year':'1Y'}
+        if self.compare_tim_res.lower() in compare_tim_res_map:
+            refx = refx.resample(time=compare_tim_res_map[self.compare_tim_res.lower()]).mean()
         else:
             sys.exit(1)
 
@@ -256,9 +256,9 @@ class ReferenceDatasetHandler:
     def _make_stn_ref_parallel(self,station_list,i):
         if (self.ref_source.lower()=='grdc'):
             print(f"deal with reference station: {station_list['ID'][i]}")
-            if (self.compare_tres.lower() == 'month'):
+            if (self.compare_tim_res.lower() == 'month'):
                 stn=xr.open_dataset('%s/GRDC_Month/%s_Q_Month.nc'%(self.ref_dir,station_list['ID'][i]))
-            elif (self.compare_tres.lower() == 'day'):
+            elif (self.compare_tim_res.lower() == 'day'):
                 stn=xr.open_dataset('%s/GRDC_Day/%s_Q_Day.Cmd.nc'%(self.ref_dir,station_list['ID'][i]))
         elif (self.ref_source=='PLUMBER2'):
             print(f"deal with reference station: {station_list['ID'][i]}")
@@ -294,20 +294,20 @@ class ReferenceDatasetHandler:
         df = stn #xr.decode_cf(stn[self.ref_varname])
 
         dfx1=df.sel(time=slice(f'{startx}-01-01',f'{endx}-12-31')) 
-        if (self.compare_tres.lower() == 'month'):
+        if (self.compare_tim_res.lower() == 'month'):
             dfx2=dfx1.resample(time='1M').mean()
             time_index = pd.date_range(start=f'{startx}-01-01', end=f'{endx}-12-31', freq='M')
-        elif (self.compare_tres.lower() == 'day'):
+        elif (self.compare_tim_res.lower() == 'day'):
             dfx2=dfx1.resample(time='1D').mean()
             time_index = pd.date_range(start=f'{startx}-01-01', end=f'{endx}-12-31', freq='D')
-        elif (self.compare_tres.lower() == 'hour'):
+        elif (self.compare_tim_res.lower() == 'hour'):
             dfx2=dfx1.resample(time='1H').mean()
             time_index = pd.date_range(start=f'{startx}-01-01', end=f'{endx}-12-31', freq='H')       
-        elif (self.compare_tres.lower() == 'year'):
+        elif (self.compare_tim_res.lower() == 'year'):
             dfx2=dfx1.resample(time='1Y').mean()
             time_index = pd.date_range(start=f'{startx}-01-01', end=f'{endx}-12-31', freq='Y')   
         else:
-            print('check self.compare_tres')
+            print('check self.compare_tim_res')
             sys.exit(1)
         # Create empty xarray dataset with time index
         ds = xr.Dataset({'data': (['time'], np.nan*np.ones(len(time_index)))},coords={'time': time_index})
@@ -368,9 +368,9 @@ class ReferenceDatasetHandler:
                     ds['time'] = pd.date_range(f"{ii}-01-01", freq=freq_map[TimRes.lower()], periods=num)
                 else:
                     sys.exit(1)
-                compare_tres_map = {'month': '1M', 'day': '1D', 'hour': '1H'}
-                if self.compare_tres.lower() in compare_tres_map:
-                    ds = ds.resample(time=compare_tres_map[self.compare_tres.lower()]).mean()
+                compare_tim_res_map = {'month': '1M', 'day': '1D', 'hour': '1H'}
+                if self.compare_tim_res.lower() in compare_tim_res_map:
+                    ds = ds.resample(time=compare_tim_res_map[self.compare_tim_res.lower()]).mean()
                 else:
                     sys.exit(1)
                 ds = ds.sel(time=slice(f'{ii}-01-01', f'{ii}-12-31'))
@@ -556,15 +556,15 @@ class SimulationDatasetHandler:
         #need check here
         simx0['lon'] = (simx0['lon'] + 180) % 360 - 180.0
         lon_new = xr.DataArray(
-                data=np.arange(self.min_lon+self.compare_gres/2, self.max_lon, self.compare_gres),
+                data=np.arange(self.min_lon+self.compare_geo_res/2, self.max_lon, self.compare_geo_res),
                 dims=('lon',),
-                coords={'lon': np.arange(self.min_lon+self.compare_gres/2, self.max_lon, self.compare_gres)},
+                coords={'lon': np.arange(self.min_lon+self.compare_geo_res/2, self.max_lon, self.compare_geo_res)},
                 attrs={'units': 'degrees_east', 'long_name': 'longitude'}
                 )
         lat_new = xr.DataArray(
-                data=np.arange(self.min_lat+self.compare_gres/2, self.max_lat, self.compare_gres),
+                data=np.arange(self.min_lat+self.compare_geo_res/2, self.max_lat, self.compare_geo_res),
                 dims=('lat',),
-                coords={'lat': np.arange(self.min_lat+self.compare_gres/2, self.max_lat, self.compare_gres)},
+                coords={'lat': np.arange(self.min_lat+self.compare_geo_res/2, self.max_lat, self.compare_geo_res)},
                 attrs={'units': 'degrees_north', 'long_name': 'latitude'}
                 )
         new_grid = xr.Dataset({'lon': lon_new, 'lat': lat_new})
@@ -587,10 +587,10 @@ class SimulationDatasetHandler:
             sys.exit(1)     
 
         freq_map = {'month': '1M', 'day': '1D', 'hour': '1H', 'year': '1Y'}
-        if self.compare_tres.lower() in freq_map:
-            simx = simx.resample(time=freq_map[self.compare_tres.lower()]).mean()
+        if self.compare_tim_res.lower() in freq_map:
+            simx = simx.resample(time=freq_map[self.compare_tim_res.lower()]).mean()
         else:
-            print('Check self.compare_tres')
+            print('Check self.compare_tim_res')
             sys.exit(1)
 
         simx = simx.sel(time=slice(f'{ii}-01-01T00:00:00', f'{ii}-12-31T23:59:59'))
@@ -613,11 +613,11 @@ class SimulationDatasetHandler:
         dfx = df # xr.decode_cf(df)
         dfx1=dfx.sel(time=slice(f'{startx}-01-01',f'{endx}-12-31')) 
         print(dfx1)
-        # Resample based on compare_tres
-        compare_tres_map = {'month': '1M', 'day': '1D', 'hour': '1H', 'year':'1Y'}
-        if self.compare_tres.lower() in compare_tres_map:
-            dfx2 = dfx1.resample(time=compare_tres_map[self.compare_tres.lower()]).mean()
-            time_index = pd.date_range(start=f'{startx}-01-01', end=f'{endx}-12-31', freq=compare_tres_map[self.compare_tres.lower()])
+        # Resample based on compare_tim_res
+        compare_tim_res_map = {'month': '1M', 'day': '1D', 'hour': '1H', 'year':'1Y'}
+        if self.compare_tim_res.lower() in compare_tim_res_map:
+            dfx2 = dfx1.resample(time=compare_tim_res_map[self.compare_tim_res.lower()]).mean()
+            time_index = pd.date_range(start=f'{startx}-01-01', end=f'{endx}-12-31', freq=compare_tim_res_map[self.compare_tim_res.lower()])
         else:
             sys.exit(1)
 
@@ -686,9 +686,9 @@ class SimulationDatasetHandler:
         else:
             sys.exit(1)
 
-        compare_tres_map = {'month': '1M', 'day': '1D', 'hour': '1H'}
-        if self.compare_tres.lower() in compare_tres_map:
-            dfx = dfx.resample(time=compare_tres_map[self.compare_tres.lower()]).mean()
+        compare_tim_res_map = {'month': '1M', 'day': '1D', 'hour': '1H'}
+        if self.compare_tim_res.lower() in compare_tim_res_map:
+            dfx = dfx.resample(time=compare_tim_res_map[self.compare_tim_res.lower()]).mean()
         else:
             sys.exit(1)
 

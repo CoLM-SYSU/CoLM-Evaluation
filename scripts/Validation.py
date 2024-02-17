@@ -7,11 +7,12 @@ from joblib import Parallel, delayed
 from matplotlib import colors
 # Check the platform
 from metrics import metrics_geo,metrics_stn
+from scores import scores_geo,scores_stn
 
 os.environ['PYTHONWARNINGS']='ignore::FutureWarning'
 os.environ['PYTHONWARNINGS']='ignore::RuntimeWarning'
 
-class Validation_geo(metrics_geo):
+class Validation_geo(metrics_geo,scores_geo):
     def __init__(self, info):
         self.name = 'Validation'
         self.version = '0.1'
@@ -31,6 +32,11 @@ class Validation_geo(metrics_geo):
         pb = getattr(self, metric)(s, o)
         pb_da = xr.DataArray(pb, coords=[o.lat, o.lon], dims=['lat', 'lon'], name=metric)
         pb_da.to_netcdf(f'{self.casedir}/output/{key}_{metric}.nc')
+
+    def process_score(self, key, score, s, o):
+        pb = getattr(self, score)(s, o)
+        pb_da = xr.DataArray(pb, coords=[o.lat, o.lon], dims=['lat', 'lon'], name=score)
+        pb_da.to_netcdf(f'{self.casedir}/output/{key}_{score}.nc')
 
     def make_validation(self, **kwargs):
         o = xr.open_dataset(f'{self.casedir}/tmp/ref/' + f'ref_{self.ref_varname}.nc')[f'{self.ref_varname}'] 
@@ -60,6 +66,15 @@ class Validation_geo(metrics_geo):
                 print('No such metric')
                 sys.exit(1)
 
+        for score in self.scores:
+            print(score)
+            if hasattr(self, score):
+                self.process_score(self.ref_varname, score, s, o)
+            else:
+                print(score)
+                print('No such score')
+                sys.exit(1)
+
         print("=======================================")
         print(" ")
         print(" ")
@@ -71,13 +86,14 @@ class Validation_geo(metrics_geo):
         from matplotlib import colors
         key=self.ref_varname
         for metric in self.metrics:
+            print(f'plotting metric: {metric}')
             if metric in ['bias', 'mae', 'ubRMSE', 'apb', 'RMSE', 'L','pc_bias','apb']:
                 vmin = -100.0
                 vmax = 100.0
-            elif metric in ['KGE', 'KGESS', 'NSE', 'correlation']:
+            elif metric in ['KGE', 'NSE', 'correlation']:
                 vmin = -1
                 vmax = 1
-            elif metric in ['correlation_R2', 'index_agreement','nBiasScore','nRMSEScore']:
+            elif metric in ['correlation_R2', 'index_agreement']:
                 vmin = 0
                 vmax = 1
             else:
@@ -88,8 +104,26 @@ class Validation_geo(metrics_geo):
             cmap = colors.ListedColormap(cpool)
             norm = colors.BoundaryNorm(bnd, cmap.N)
             self.plot_map(cmap, norm, key, bnd,metric)
+        print("=======================================")
+        for score in self.scores:
+            print(f'plotting score: {score}')
+            if score in ['KGESS']:
+                vmin = -1
+                vmax = 1
+            elif score in ['nBiasScore','nRMSEScore']:
+                vmin = 0
+                vmax = 1
+            else:
+                vmin = -1
+                vmax = 1
+            bnd = np.linspace(vmin, vmax, 11)
+            cpool = ['#a50026', '#d73027', '#f46d43', '#fdae61', '#fee090', '#e0f3f8', '#abd9e9', '#74add1', '#4575b4', '#313695']
+            cmap = colors.ListedColormap(cpool)
+            norm = colors.BoundaryNorm(bnd, cmap.N)
+            self.plot_map(cmap, norm, key, bnd,score)
+        print("=======================================")
 
-    def plot_map(self, colormap, normalize, key, levels, metric, **kwargs):
+    def plot_map(self, colormap, normalize, key, levels, xitem, **kwargs):
         # Plot settings
         import matplotlib.pyplot as plt
         import matplotlib
@@ -116,13 +150,13 @@ class Validation_geo(metrics_geo):
         rcParams.update(params)
 
         # Set the region of the map based on self.Max_lat, self.Min_lat, self.Max_lon, self.Min_lon
-        ds=xr.open_dataset(f'{self.casedir}/output/{key}_{metric}.nc')
+        ds=xr.open_dataset(f'{self.casedir}/output/{key}_{xitem}.nc')
         # Extract variables
         lat = ds.lat.values
         lon = ds.lon.values
         lat, lon = np.meshgrid(lat[::-1], lon)
 
-        var = ds[metric].transpose("lon", "lat")[:, ::-1].values
+        var = ds[xitem].transpose("lon", "lat")[:, ::-1].values
 
         fig = plt.figure()
         M = Basemap(projection='cyl', llcrnrlat=self.min_lat, urcrnrlat=self.max_lat,
@@ -138,8 +172,8 @@ class Validation_geo(metrics_geo):
         cbaxes = fig.add_axes([0.26, 0.31, 0.5, 0.015])
         cb = fig.colorbar(cs, cax=cbaxes, ticks=levels, orientation='horizontal', spacing='uniform')
         cb.solids.set_edgecolor("face")
-        cb.set_label('%s' % (metric), position=(0.5, 1.5), labelpad=-35)
-        plt.savefig(f'{self.casedir}/output/{key}_{metric}.png', format='png', dpi=300)
+        cb.set_label('%s' % (xitem), position=(0.5, 1.5), labelpad=-35)
+        plt.savefig(f'{self.casedir}/output/{key}_{xitem}.png', format='png', dpi=300)
         plt.close()
 
 

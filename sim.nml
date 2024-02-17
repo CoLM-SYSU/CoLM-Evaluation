@@ -1,0 +1,75 @@
+&general
+  Latent_Heat_sim_source             =  case2
+  Sensible_Heat_sim_source           =  case1
+  Runoff_sim_source                  =  case1
+  Surface_Net_Radiation_sim_source   =  case1
+/
+
+
+&Latent_Heat
+#casename: Latent_Heat
+  case2_model           =  CoLM
+  case2_timezone        =  0
+  case2_data_type       =  geo
+  case2_data_groupby    =  Month   
+  case2_dir             =  /tera07/zhwei/For_BaiFan/cases/MSWX/
+  case2_varname         =  f_lfevpa
+
+  case2_tim_res         =  Day         #Day or Month
+  case2_geo_res         =  0.25
+  case2_suffix          =  Global_IGBP_MSWX_1026_hist_
+  case2_prefix          =  
+  case2_syear           =  1995
+  case2_eyear           =  2020
+/
+
+&Sensible_Heat
+#casename: Sensible_Heat
+  case1_model           =  CoLM
+  case1_timezone        =  0
+  case1_data_type       =  geo
+  case1_data_groupby    =  Month   
+  case1_dir             =  /tera07/zhwei/For_BaiFan/cases/MSWX/
+  case1_varname         =  f_fsena
+
+  case1_tim_res         =  Day         #Day or Month
+  case1_geo_res         =  0.25
+  case1_suffix          =  Global_IGBP_MSWX_1026_hist_
+  case1_prefix          =  
+  case1_syear           =  1995
+  case1_eyear           =  2020
+/
+
+&Runoff
+#casename: Runoff
+  case1_model           =  CoLM
+  case1_timezone        =  0
+  case1_data_type       =  geo
+  case1_data_groupby    =  Month   
+  case1_dir             =  /tera07/zhwei/For_BaiFan/cases/MSWX/
+  case1_varname         =  f_rnof
+
+  case1_tim_res         =  Day         #Day or Month
+  case1_geo_res         =  0.25
+  case1_suffix          =  Global_IGBP_MSWX_1026_hist_
+  case1_prefix          =  
+  case1_syear           =  1995
+  case1_eyear           =  2020
+/
+
+&Surface_Net_Radiation
+#casename: Surface_Net_Radiation
+  case1_model           =  CoLM
+  case1_timezone        =  0
+  case1_data_type       =  geo
+  case1_data_groupby    =  Month   
+  case1_dir             =  /tera07/zhwei/For_BaiFan/cases/MSWX/
+  case1_varname         =  f_rnet
+
+  case1_tim_res         =  Day         #Day or Month
+  case1_geo_res         =  0.25
+  case1_suffix          =  Global_IGBP_MSWX_1026_hist_
+  case1_prefix          =  
+  case1_syear           =  1995
+  case1_eyear           =  2020
+/
