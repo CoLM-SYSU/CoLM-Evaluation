@@ -8,7 +8,8 @@ from namelist_read import namelist_read
 from namelist_read import get_general_info
 #from Makefiles_parallel import Makefiles_parallel
 from Validation import Validation_geo,Validation_stn
-from datahandle import DatasetHandler
+from Data_handle import DatasetHandler
+from Figure_handle import FigureHandler
 os.environ['PYTHONWARNINGS']='ignore::UserWarning'
 os.environ['PYTHONWARNINGS']='ignore::FutureWarning'
 
@@ -31,6 +32,8 @@ if __name__=='__main__':
     evaluation_items    =  nl.select_variables(main_nl['evaluation_items']).keys()
     #read main_nl['metrics'], if the metric is set as true, then select the metric from the metrics
     metric_vars         =  nl.select_variables(main_nl['metrics']).keys()
+    #read main_nl['metrics'], if the metric is set as true, then select the metric from the metrics
+    score_vars          =  nl.select_variables(main_nl['scores']).keys()
     #read the reference namelist
     ref_nml    =  nl.read_namelist(f'{main_nl["general"]["reference_nml"]}')
 
@@ -54,7 +57,7 @@ if __name__=='__main__':
         for sim_source in sim_sources:
             for ref_source in ref_sources:
                 print("===============================================================================")
-                general_info_object=get_general_info(evaluation_item,sim_nml,ref_nml,main_nl,sim_source,ref_source,metric_vars)
+                general_info_object=get_general_info(evaluation_item,sim_nml,ref_nml,main_nl,sim_source,ref_source,metric_vars,score_vars)
                 general_info = general_info_object.to_dict()
                 if main_nl['general']['evaluation_only']:
                     print('evaluation only, no makefiles')

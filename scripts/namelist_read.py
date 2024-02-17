@@ -29,7 +29,7 @@ class namelist_read:
         KGE                 : Kling-Gupta Efficiency
         
         """
-        self.name = 'metrics'
+        self.name = 'namelist_read'
         self.version = '0.1'
         self.release = '0.1'
         self.date = 'Mar 2023'
@@ -110,8 +110,8 @@ class namelist_read:
                             elif ',' in value.strip():
                                 current_dict[key.strip()] = value.strip().split(',')
                             #if the key str value in dict contains a colon, set its type to list
-                            elif ':' in value.strip():
-                                current_dict[key.strip()] = value.strip().split(':')
+                            #elif ':' in value.strip():
+                            #    current_dict[key.strip()] = value.strip().split(':')
                             
                             #else set its type to str
                             else:
@@ -120,7 +120,7 @@ class namelist_read:
         return namelist
 
 class get_general_info:
-    def __init__(self,item,sim_nml,ref_nml,main_nl,sim_source,ref_source,metric_vars):
+    def __init__(self,item,sim_nml,ref_nml,main_nl,sim_source,ref_source,metric_vars,score_vars):
         self.name = self.__class__.__name__  
         self.minimum_lenghth         = (main_nl['general']['min_year'])
         self.max_lat                 =  main_nl['general']['max_lat']
@@ -129,24 +129,25 @@ class get_general_info:
         self.min_lon                 =  main_nl['general']['min_lon']
         self.syear                   =  main_nl['general']['syear']
         self.eyear                   =  main_nl['general']['eyear']
-        self.compare_tres            =  main_nl['general']['compare_tres'].lower()
-        self.compare_gres            =  main_nl['general']['compare_gres']
+        self.compare_tim_res            =  main_nl['general']['compare_tim_res'].lower()
+        self.compare_geo_res            =  main_nl['general']['compare_geo_res']
         self.casename                =  main_nl['general']['casename']
         self.casedir                 =  os.path.join(main_nl['general']['casedir'], main_nl['general']['casename'])+f'/{item}/{sim_source}___{ref_source}/'
         self.evaluation_only         =  main_nl['general']['evaluation_only']
         self.num_cores               =  main_nl['general']['num_cores']
         self.metrics                 =  metric_vars
+        self.scores                  =  score_vars
+
         self.compare_tzone           =  main_nl['general']['compare_tzone']
 
         #for reference data
         self.ref_source              =  ref_source
         self.ref_varname             =  ref_nml[f'{item}'][f'{ref_source}_varname']
         self.ref_data_type           =  ref_nml[f'{item}'][f'{ref_source}_data_type']
-        self.ref_data_groupby        =  ref_nml[f'{item}'][f'{ref_source}_data_groupby']
+        self.ref_data_groupby        =  ref_nml[f'{item}'][f'{ref_source}_data_groupby'].lower()
         self.ref_dir                 =  ref_nml[f'{item}'][f'{ref_source}_dir']
         if self.ref_data_type == 'stn':
             self.ref_fulllist            =  ref_nml[f'{item}'][f'{ref_source}_fulllist']
-
         self.ref_tim_res                 =  ref_nml[f'{item}'][f'{ref_source}_tim_res'].lower()
         self.ref_geo_res                 =  ref_nml[f'{item}'][f'{ref_source}_geo_res']
         self.ref_suffix                  =  ref_nml[f'{item}'][f'{ref_source}_suffix']
@@ -159,7 +160,7 @@ class get_general_info:
         self.sim_source              =  sim_source
         self.sim_varname             =  sim_nml[f'{item}'][f'{sim_source}_varname']
         self.sim_data_type           =  sim_nml[f'{item}'][f'{sim_source}_data_type']
-        self.sim_data_groupby        =  sim_nml[f'{item}'][f'{sim_source}_data_groupby']
+        self.sim_data_groupby        =  sim_nml[f'{item}'][f'{sim_source}_data_groupby'].lower()
         self.sim_dir                 =  sim_nml[f'{item}'][f'{sim_source}_dir']
         if self.sim_data_type == 'stn':
             self.sim_fulllist        =  sim_nml[f'{item}'][f'{sim_source}_fulllist']
@@ -244,7 +245,7 @@ class get_general_info:
                 self.max_uparea          =  ref_nml[f'{item}'][f'{ref_source}_max_uparea']
                 self.min_uparea          =  ref_nml[f'{item}'][f'{ref_source}_min_uparea'] 
                 if self.ref_source.lower() == 'grdc':
-                    if ((self.compare_tres.lower()=="hour")):
+                    if ((self.compare_tim_res.lower()=="hour")):
                         print('compare_res="Hour", the compare_res should be "Day","Month" or longer ')
                         sys.exit(1)
                     self.ref_fulllist            =  f"{self.ref_dir}/list/GRDC_alloc_{self.sim_geo_res}Deg.txt"
@@ -254,7 +255,7 @@ class get_general_info:
                     station_list['use_eyear']    =  [-9999] * len(station_list['lon'])
                     station_list['obs_syear']    =  [-9999] * len(station_list['lon']) #must be integer
                     station_list['obs_eyear']    =  [-9999] * len(station_list['lon']) #must be integer
-                    if (self.compare_tres.lower() == 'month'):
+                    if (self.compare_tim_res.lower() == 'month'):
                         for i in range(len(station_list['ID'])):
                             if(os.path.exists('%s/GRDC_Month/%s_Q_Month.nc'%(self.ref_dir,station_list['ID'][i]))):
                                 with xr.open_dataset('%s/GRDC_Month/%s_Q_Month.nc'%(self.ref_dir,station_list['ID'][i])) as df:
@@ -273,7 +274,7 @@ class get_general_info:
                                             ): 
                                         station_list['Flag'].values[i]=True
                                         print(f"Station ID : {station_list['ID'].values[i]} is selected")
-                    elif (self.compare_tres.lower() == 'day'):
+                    elif (self.compare_tim_res.lower() == 'day'):
                         for i in range(len(station_list['ID'])):
                             if(os.path.exists('%s/GRDC_Day/%s_Q_Day.Cmd.nc'%(self.ref_dir,station_list['ID'][i]))):
                                 with xr.open_dataset('%s/GRDC_Day/%s_Q_Day.Cmd.nc'%(self.ref_dir,station_list['ID'][i])) as df:

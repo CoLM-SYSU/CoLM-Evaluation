@@ -1,0 +1,561 @@
+&General
+  Biomass_ref_source            = "XuSaatchi2021"
+  BurnedArea_ref_source         = "GFED4.1S"
+  LAI_ref_source                = Yuan_etal,Li_teal
+  Inundation_ref_source         = GIEMS_v2_2020,GIEMS_v2_2021
+  Evapotranspiration_ref_source =  PLUMBER2,GLEAM
+  Latent_Heat_ref_source        =  FLUXCOM
+  Streamflow_ref_source         =  GRDC
+/
+
+############################Ecosystem and Carbon Cycle############################
+&Biomass
+#XuSaatchi2021
+  XuSaatchi2021_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/Biomass/XuSaatchi2021
+  XuSaatchi2021_TimRes      =  Year         #Day or Month or Year
+  XuSaatchi2021_GeoRes      =  30min
+  XuSaatchi2021_DataGroupby =  Single
+  XuSaatchi2021_Suffix      =  biomass
+  XuSaatchi2021_Prefix      =  
+  XuSaatchi2021_Syear       =  2000
+  XuSaatchi2021_Eyear       =  2019
+  XuSaatchi2021_figplot     =  True
+  XuSaatchi2021_varname     =  biomass      
+/
+
+&BurnedArea
+#GFED4.1S
+  GFED4.1S_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/Burned_Area/GFED4.1S
+  GFED4.1S_TimRes      =  Month         #Day or Month
+  GFED4.1S_GeoRes      =  30min
+  GFED4.1S_DataGroupby =  Single
+  GFED4.1S_Suffix      =  
+  GFED4.1S_Prefix      =  burntArea
+  GFED4.1S_Syear       =  1997
+  GFED4.1S_Eyear       =  2016
+  GFED4.1S_figplot     =  True
+  GFED4.1S_varname     =  burntArea        
+/
+
+&LAI
+#Yuan_etal
+  Yuan_etal_Dir         =  /tera05/zhwei/LAI/Yuan_etal/30s
+  Yuan_etal_TimRes      =  Day         #Day or Month
+  Yuan_etal_GeoRes      =  0.49998min
+  Yuan_etal_DataGroupby =  Year
+  Yuan_etal_Suffix      =  
+  Yuan_etal_Prefix      =  
+  Yuan_etal_Syear       =  2000
+  Yuan_etal_Eyear       =  2020
+  Yuan_etal_figplot     =  True
+  Yuan_etal_varname     =  lai           
+/
+
+&Global_Net_Ecosystem_Carbon_Balance
+#GCP
+  GCP_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/Global_Net_Ecosystem_Carbon_Balance/GCP
+  GCP_TimRes      =  Year          # Day or Month or Year
+  GCP_GeoRes      =  0min          # 0 min means "fldmean"
+  GCP_DataGroupby =  Single
+  GCP_Suffix      =  
+  GCP_Prefix      =  nbp
+  GCP_Syear       =  1959
+  GCP_Eyear       =  2016
+  GCP_figplot     =  True
+  GCP_varname     =  nbp            
+/
+
+&Gross_Primary_Productivity
+#FLUXCOM
+  FLUXCOM_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/Gross_Primary_Productivity/FLUXCOM
+  FLUXCOM_TimRes      =  Month          # Day or Month or Year
+  FLUXCOM_GeoRes      =  30min          # 0 min means "fldmean"
+  FLUXCOM_DataGroupby =  Single
+  FLUXCOM_Suffix      =  
+  FLUXCOM_Prefix      =  gpp
+  FLUXCOM_Syear       =  1980
+  FLUXCOM_Eyear       =  2013
+  FLUXCOM_figplot     =  True
+  FLUXCOM_varname     =  gpp           
+/
+
+&Ecosystem_Respiration
+#FLUXCOM
+  FLUXCOM_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/Ecosystem_Respiration/FLUXCOM
+  FLUXCOM_TimRes      =  Month          # Day or Month or Year
+  FLUXCOM_GeoRes      =  30min          # 0 min means "fldmean"
+  FLUXCOM_DataGroupby =  Single
+  FLUXCOM_Suffix      =  
+  FLUXCOM_Prefix      =  reco
+  FLUXCOM_Syear       =  1980
+  FLUXCOM_Eyear       =  2013
+  FLUXCOM_figplot     =  True
+  FLUXCOM_varname     =  reco         
+/
+
+&Soil_Carbon
+#HWSD
+  HWSD_source      =  
+  HWSD_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/Soil_Carbon/HWSD
+  HWSD_TimRes      =  Climatology          # Day or Month or Year,Climatology
+  HWSD_GeoRes      =  30min          # 0 min means "fldmean"
+  HWSD_DataGroupby =  Single
+  HWSD_Suffix      =  
+  HWSD_Prefix      =  soilc_0.5x0.5
+  HWSD_Syear       =  0000
+  HWSD_Eyear       =  0000
+  HWSD_figplot     =  True
+  HWSD_varname     =  cSoilAbove1m      
+/
+
+&Nitrogen_Fixation
+#Davies-Barnard
+  Davies-Barnard_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/Nitrogen_Fixation/Davies-Barnard
+  Davies-Barnard_TimRes      =  Climatology          # Day or Month or Year,Climatology
+  Davies-Barnard_GeoRes      =  30min          # 0 min means "fldmean"
+  Davies-Barnard_DataGroupby =  Single
+  Davies-Barnard_Suffix      =  
+  Davies-Barnard_Prefix      =  fBNF_0.5x0.5
+  Davies-Barnard_Syear       =  0000
+  Davies-Barnard_Eyear       =  0000
+  Davies-Barnard_figplot     =  True
+  Davies-Barnard_varname     =  fBNF           
+/
+
+
+##################################################################################
+
+
+############################      Hydrology Cycle      ############################
+&Evapotranspiration
+#GLEAM
+  GLEAM_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/GLEAM/v3.7a/
+  GLEAM_TimRes      =  Day         #Day or Month
+  GLEAM_GeoRes      =  15min
+  GLEAM_DataGroupby =  Year
+  GLEAM_Suffix      =  
+  GLEAM_Prefix      =  _GLEAM_v3.7a
+  GLEAM_Syear       =  1980
+  GLEAM_Eyear       =  2022
+  GLEAM_figplot     =  True
+  GLEAM_varname     =  E                   
+/
+
+&Transpiration
+#GLEAM
+  GLEAM_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/GLEAM/v3.7a/
+  GLEAM_TimRes      =  Day         #Day or Month
+  GLEAM_GeoRes      =  15min
+  GLEAM_DataGroupby =  Year
+  GLEAM_Suffix      =  
+  GLEAM_Prefix      =  _GLEAM_v3.7a
+  GLEAM_Syear       =  1980
+  GLEAM_Eyear       =  2022
+  GLEAM_figplot     =  True
+  GLEAM_varname     =  Et      
+/
+
+&Interception
+#GLEAM
+  GLEAM_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/GLEAM/v3.7a/
+  GLEAM_TimRes      =  Day         #Day or Month
+  GLEAM_GeoRes      =  15min
+  GLEAM_DataGroupby = Year
+  GLEAM_Suffix      =  
+  GLEAM_Prefix      =  _GLEAM_v3.7a
+  GLEAM_Syear       =  1980
+  GLEAM_Eyear       =  2022
+  GLEAM_figplot     =  True
+  GLEAM_varname     =   Ei                
+/
+
+&SoilEvaporation
+#GLEAM
+  GLEAM_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/GLEAM/v3.7a/
+  GLEAM_TimRes      =  Day         #Day or Month
+  GLEAM_GeoRes      =  15min
+  GLEAM_DataGroupby =  Year
+  GLEAM_Suffix      =  
+  GLEAM_Prefix      =  _GLEAM_v3.7a
+  GLEAM_Syear       =  1980
+  GLEAM_Eyear       =  2022
+  GLEAM_figplot     =  True
+  GLEAM_varname     =  Es               
+/
+
+&SoilMoisture
+#GLEAM
+  GLEAM_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/GLEAM/v3.7a/
+  GLEAM_TimRes      =  Day         #Day or Month
+  GLEAM_GeoRes      =  15min
+  GLEAM_DataGroupby =  Year
+  GLEAM_Suffix      =  
+  GLEAM_Prefix      =  _GLEAM_v3.7a
+  GLEAM_Syear       =  1980
+  GLEAM_Eyear       =  2022
+  GLEAM_figplot     =  True
+  GLEAM_varname     =  SMsurf               
+/
+
+&Runoff
+#ERA5-Land
+  ERA5-Land_Dir         =  /tera04/zhwei/cama/runoff/daily/ERA5LAND
+  ERA5-Land_TimRes      =  Day         #Day or Month
+  ERA5-Land_GeoRes      =  06min
+  ERA5-Land_DataGroupby =  Year
+  ERA5-Land_Suffix      =  
+  ERA5-Land_Prefix      =  
+  ERA5-Land_Syear       =  1950
+  ERA5-Land_Eyear       =  2021
+  ERA5-Land_figplot     =  True
+  ERA5-Land_varname     =  ro    
+/
+
+&Inundation
+#GIEMS_v2_2020
+  GIEMS_v2_2020_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/Inundation/GIEMS_v2_2020/regrid_0.25d/
+  GIEMS_v2_2020_TimRes      =  Month         #Day or Month
+  GIEMS_v2_2020_GeoRes      =  15min
+  GIEMS_v2_2020_DataGroupby =  Year
+  GIEMS_v2_2020_Suffix      =  GIEMS_v2_2020_
+  GIEMS_v2_2020_Prefix      =  
+  GIEMS_v2_2020_Syear       =  1992
+  GIEMS_v2_2020_Eyear       =  2015
+  GIEMS_v2_2020_figplot     =  True
+  GIEMS_v2_2020_varname     =  fldfrc   
+        
+#GIEMS_v2_2021
+  GIEMS_v2_2021_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/Inundation/GIEMS_v2_2020/regrid_0.25d/
+  GIEMS_v2_2021_TimRes      =  Month         #Day or Month
+  GIEMS_v2_2021_GeoRes      =  15min
+  GIEMS_v2_2021_DataGroupby =  Year
+  GIEMS_v2_2021_Suffix      =  GIEMS_v2_2020_
+  GIEMS_v2_2021_Prefix      =  
+  GIEMS_v2_2021_Syear       =  1992
+  GIEMS_v2_2021_Eyear       =  2015
+  GIEMS_v2_2021_figplot     =  True
+  GIEMS_v2_2021_varname     =  fldfrc       
+/
+
+
+&Terrestrial_Water_Storage_Anomaly
+#GRACE
+  GRACE_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/Terrestrial_Water_Storage_Anomaly/GRACE
+  GRACE_TimRes      =  Month          # Day or Month or Year
+  GRACE_GeoRes      =  30min          # 0 min means "fldmean"
+  GRACE_DataGroupby =  Single
+  GRACE_Suffix      =  
+  GRACE_Prefix      =  twsa_0.5x0.5
+  GRACE_Syear       =  2002
+  GRACE_Eyear       =  2014
+  GRACE_figplot     =  True
+  GRACE_varname     =  twsa            
+/
+
+&Snow_Water_Equivalent
+#CanSISE
+  CanSISE_source      =  CanSISE
+  CanSISE_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/Snow_Water_Equivalent/CanSISE
+  CanSISE_TimRes      =  Month          # Day or Month or Year
+  CanSISE_GeoRes      =  30min          # 0 min means "fldmean"
+  CanSISE_DataGroupby =  Single
+  CanSISE_Suffix      =  
+  CanSISE_Prefix      =  swe
+  CanSISE_Syear       =  1981
+  CanSISE_Eyear       =  2010
+  CanSISE_figplot     =  True
+  CanSISE_varname     =  swe            
+/
+
+&Permafrost
+#NSIDC
+  NSIDC_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/Permafrost/NSIDC
+  NSIDC_TimRes      =  Climatology          # Day or Month or Year
+  NSIDC_GeoRes      =  30min          # 0 min means "fldmean"
+  NSIDC_DataGroupby =  Single
+  NSIDC_Suffix      =  
+  NSIDC_Prefix      =  NSIDC_0.5x0.5
+  NSIDC_Syear       =  0000
+  NSIDC_Eyear       =  0000
+  NSIDC_figplot     =  True
+  NSIDC_varname     =  permafrost_extent  
+/
+
+&StreamFlow
+ #GRDC
+  GRDC_Dir             =  /tera03/zhwei/Validation_Data/stn_obs/StreamFlow/GRDC
+  GRDC_Max_UpArea      =  50000000000.0  #km2, upstream area
+  GRDC_Min_UpArea      =  1000.0  #km2, upstream area
+  GRDC_Pltstn          =  True
+  GRDC_varname         =  discharge       
+/
+
+&Inundation
+#GIEMS_v2_2020
+  GIEMS_v2_2020_Dir          =  /tera03/zhwei/Validation_Data/geo_obs/Inundation/GIEMS_v2_2020/regrid_0.25d/
+  GIEMS_v2_2020_TimRes      =  Month         #Day or Month
+  GIEMS_v2_2020_GeoRes      =  15min
+  GIEMS_v2_2020_DataGroupby =  Year
+  GIEMS_v2_2020_Suffix      =  GIEMS_v2_2020_
+  GIEMS_v2_2020_Prefix      =  
+  GIEMS_v2_2020_Syear       =  1992
+  GIEMS_v2_2020_Eyear       =  2015
+
+  GIEMS_v2_2020_figplot     =  True
+  GIEMS_v2_2020_varname     =  fldfrc        
+/
+
+
+##################################################################################
+
+########################     Radiation and Energy Cycle    ########################
+&Albedo
+#CERESed4.1
+  CERESed4.1_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/Albedo/CERESed4.1
+  CERESed4.1_TimRes      =  Month         #Hour, Day or Month,Year,Climatology
+  CERESed4.1_GeoRes      =  30min
+  CERESed4.1_DataGroupby =  Single         #Hour, Day, Month,Year,Single
+  CERESed4.1_Suffix      =  albedo
+  CERESed4.1_Prefix      =  
+  CERESed4.1_Syear       =  2000
+  CERESed4.1_Eyear       =  2018
+  CERESed4.1_figplot     =  True
+  CERESed4.1_varname     =  albedo     
+/
+
+&Surface_Upward_SW_Radiation
+#CERESed4.1
+  CERESed4.1_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/Surface_Upward_SW_Radiation/CERESed4.1
+  CERESed4.1_TimRes      =  Month         #Hour, Day or Month,Year,Climatology
+  CERESed4.1_GeoRes      =  30min
+  CERESed4.1_DataGroupby =  Single         #Hour, Day, Month,Year,Single
+  CERESed4.1_Suffix      =  rsus
+  CERESed4.1_Prefix      =  
+  CERESed4.1_Syear       =  2000
+  CERESed4.1_Eyear       =  2018
+  CERESed4.1_figplot     =  True
+  CERESed4.1_varname     =  rsus
+/
+
+&Surface_Upward_LW_Radiation
+#CERESed4.1
+  CERESed4.1_source      =  CERESed4.1
+  CERESed4.1_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/Surface_Upward_LW_Radiation/CERESed4.1
+  CERESed4.1_TimRes      =  Month         #Hour, Day or Month,Year,Climatology
+  CERESed4.1_GeoRes      =  30min
+  CERESed4.1_DataGroupby =  Single         #Hour, Day, Month,Year,Single
+  CERESed4.1_Suffix      =  rsns
+  CERESed4.1_Prefix      =  
+  CERESed4.1_Syear       =  2000
+  CERESed4.1_Eyear       =  2018
+  CERESed4.1_figplot     =  True
+  CERESed4.1_varname     =  rsns            
+/
+
+&Surface_Net_SW_Radiation
+#CERESed4.1
+  CERESed4.1_source      =  CERESed4.1
+  CERESed4.1_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/Surface_Net_SW_Radiation/CERESed4.1
+  CERESed4.1_TimRes      =  Month         #Hour, Day or Month,Year,Climatology
+  CERESed4.1_GeoRes      =  30min
+  CERESed4.1_DataGroupby =  Single         #Hour, Day, Month,Year,Single
+  CERESed4.1_Suffix      =  rsns
+  CERESed4.1_Prefix      =  
+  CERESed4.1_Syear       =  2000
+  CERESed4.1_Eyear       =  2018
+  CERESed4.1_figplot     =  True
+  CERESed4.1_varname     =  rsns          
+/
+
+&Surface_Net_LW_Radiation
+#CERESed4.1
+  CERESed4.1_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/Surface_Net_LW_Radiation/CERESed4.1
+  CERESed4.1_TimRes      =  Month         #Hour, Day or Month,Year,Climatology
+  CERESed4.1_GeoRes      =  30min
+  CERESed4.1_DataGroupby =  Single         #Hour, Day, Month,Year,Single
+  CERESed4.1_Suffix      =  rlns
+  CERESed4.1_Prefix      =  
+  CERESed4.1_Syear       =  2000
+  CERESed4.1_Eyear       =  2018
+  CERESed4.1_figplot     =  True
+  CERESed4.1_varname     =  rlns            
+/
+
+&Surface_Net_Radiation
+#CERESed4.1
+  CERESed4.1_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/Surface_Net_Radiation/CERESed4.1
+  CERESed4.1_TimRes      =  Month         #Hour, Day or Month,Year,Climatology
+  CERESed4.1_GeoRes      =  30min
+  CERESed4.1_DataGroupby =  Single         #Hour, Day, Month,Year,Single
+  CERESed4.1_Suffix      =  rns
+  CERESed4.1_Prefix      =  
+  CERESed4.1_Syear       =  2000
+  CERESed4.1_Eyear       =  2018
+  CERESed4.1_figplot     =  True
+  CERESed4.1_varname     =  rns           
+/
+
+&Ground_Heat_Flux
+#CLASS
+  CLASS_source      =  CLASS
+  CLASS_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/Ground_Heat_Flux/CLASS
+  CLASS_TimRes      =  Month         #Hour, Day or Month,Year,Climatology
+  CLASS_GeoRes      =  30min
+  CLASS_DataGroupby =  Single         #Hour, Day, Month,Year,Single
+  CLASS_Suffix      =  hfdsl
+  CLASS_Prefix      =  
+  CLASS_Syear       =  2003
+  CLASS_Eyear       =  2009
+  CLASS_figplot     =  True
+  CLASS_varname     =  hfdsl         
+/
+
+
+&Latent_Heat
+#FLUXCOM
+  FLUXCOM_source      =  FLUXCOM
+  FLUXCOM_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/Latent_Heat/FLUXCOM
+  FLUXCOM_TimRes      =  Month          # Day or Month or Year
+  FLUXCOM_GeoRes      =  30min          # 0 min means "fldmean"
+  FLUXCOM_DataGroupby =  Single
+  FLUXCOM_Suffix      =  le
+  FLUXCOM_Prefix      =  
+  FLUXCOM_Syear       =  1980
+  FLUXCOM_Eyear       =  2014
+  FLUXCOM_figplot     =  True
+  FLUXCOM_varname     =  le           
+/
+
+&Sensible_Heat
+#FLUXCOM
+  FLUXCOM_source      =  FLUXCOM
+  FLUXCOM_Dir         =  /tera03/zhwei/Validation_Data/geo_FLUXCOM/Sensible_Heat/FLUXCOM
+  FLUXCOM_TimRes      =  Month          # Day or Month or Year
+  FLUXCOM_GeoRes      =  30min          # 0 min means "fldmean"
+  FLUXCOM_DataGroupby =  Single
+  FLUXCOM_Suffix      =  sh
+  FLUXCOM_Prefix      =  
+  FLUXCOM_Syear       =  1980
+  FLUXCOM_Eyear       =  2014
+  FLUXCOM_figplot     =  True
+  FLUXCOM_varname     =  sh                 
+/
+###################################################################################
+
+
+########################               Forcings            ########################
+
+&Surface_Air_Temperature
+#CRU4.02
+  CRU4.02_source      =  CRU4.02
+  CRU4.02_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/Surface_Air_Temperature/CRU4.02
+  CRU4.02_TimRes      =  Month         #Hour, Day or Month,Year,Climatology
+  CRU4.02_GeoRes      =  30min
+  CRU4.02_DataGroupby =  Single         #Hour, Day, Month,Year,Single
+  CRU4.02_Suffix      =  tas
+  CRU4.02_Prefix      =  
+  CRU4.02_Syear       =  1980
+  CRU4.02_Eyear       =  2017
+  CRU4.02_figplot     =  True
+  CRU4.02_varname     =  tas          
+/
+
+&Precipitation
+#CMAPv1904
+  CMAPv1904_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/Precipitation/CMAPv1904
+  CMAPv1904_TimRes      =  Month         #Hour, Day or Month,Year,Climatology
+  CMAPv1904_GeoRes      =  30min
+  CMAPv1904_DataGroupby =  Single         #Hour, Day, Month,Year,Single
+  CMAPv1904_Suffix      =  pr
+  CMAPv1904_Prefix      =  
+  CMAPv1904_Syear       =  1979
+  CMAPv1904_Eyear       =  2018
+  CMAPv1904_figplot     =  True
+  CMAPv1904_varname     =  pr             
+/
+
+&Surface_Relative_Humidity
+#CRU4.02
+  Obs_source      =  CRU4.02
+  Obs_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/Surface_Relative_Humidity/CRU4.02
+  Obs_TimRes      =  Month         #Hour, Day or Month,Year,Climatology
+  Obs_GeoRes      =  30min
+  Obs_DataGroupby =  Single         #Hour, Day, Month,Year,Single
+  Obs_Suffix      =  rhums
+  Obs_Prefix      =  
+  Obs_Syear       =  1980
+  Obs_Eyear       =  2017
+  figplot         =  True
+  CRU4.02_varname =  rhums          
+/
+
+&Surface_Downward_LW_Radiation
+#CERESed4.1
+  CERESed4.1_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/Surface_Downward_SW_Radiation/CERESed4.1
+  CERESed4.1_TimRes      =  Month         #Hour, Day or Month,Year,Climatology
+  CERESed4.1_GeoRes      =  30min
+  CERESed4.1_DataGroupby =  Single         #Hour, Day, Month,Year,Single
+  CERESed4.1_Suffix      =  rsds
+  CERESed4.1_Prefix      =  
+  CERESed4.1_Syear       =  2000
+  CERESed4.1_Eyear       =  2018
+  CERESed4.1_figplot     =  True
+  CERESed4.1_varname     =  rlds    
+/
+
+&Surface_Downward_SW_Radiation
+#CERESed4.1
+  CERESed4.1_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/Surface_Downward_SW_Radiation/CERESed4.1
+  CERESed4.1_TimRes      =  Month         #Hour, Day or Month,Year,Climatology
+  CERESed4.1_GeoRes      =  30min
+  CERESed4.1_DataGroupby =  Single         #Hour, Day, Month,Year,Single
+  CERESed4.1_Suffix      =  rsds
+  CERESed4.1_Prefix      =  
+  CERESed4.1_Syear       =  2000
+  CERESed4.1_Eyear       =  2018
+  CERESed4.1_figplot     =  True
+  CERESed4.1_varname     =  rsds           
+/
+
+&Diurnal_Min_Temperature
+#MSWXV100
+  MSWXV100_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/Diurnal_Max_Temperature/MSWXV100/Daily
+  MSWXV100_TimRes      =  Day         #Hour, Day or Month,Year,Climatology
+  MSWXV100_GeoRes      =  06min
+  MSWXV100_DataGroupby =  Day        #Hour, Day, Month,Year,Single
+  MSWXV100_Suffix      =  
+  MSWXV100_Prefix      =  
+  MSWXV100_Syear       =  1979
+  MSWXV100_Eyear       =  2020
+  MSWXV100_figplot     =  True
+  MSWXV100_varname     =  air_temperature
+/
+&Diurnal_Max_Temperature
+#MSWXV100
+  MSWXV100_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/Diurnal_Max_Temperature/MSWXV100/Daily
+  MSWXV100_TimRes      =  Day         #Hour, Day or Month,Year,Climatology
+  MSWXV100_GeoRes      =  06min
+  MSWXV100_DataGroupby =  Day        #Hour, Day, Month,Year,Single
+  MSWXV100_Suffix      =  
+  MSWXV100_Prefix      =  
+  MSWXV100_Syear       =  1979
+  MSWXV100_Eyear       =  2020
+  MSWXV100_figplot     =  True
+  MSWXV100_varname     =  air_temperature
+/
+
+&Diurnal_Temperature_Range
+#MSWXV100
+  MSWXV100_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/Diurnal_Temperature_Range/MSWXV100/Daily
+  MSWXV100_TimRes      =  Day         #Hour, Day or Month,Year,Climatology
+  MSWXV100_GeoRes      =  06min
+  MSWXV100_DataGroupby =  Day        #Hour, Day, Month,Year,Single
+  MSWXV100_Suffix      =  
+  MSWXV100_Prefix      =  
+  MSWXV100_Syear       =  1979
+  MSWXV100_Eyear       =  2020
+  MSWXV100_figplot     =  True
+  MSWXV100_varname     =  t_range           
+
+/
+###################################################################################

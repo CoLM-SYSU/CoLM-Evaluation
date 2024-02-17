@@ -1,0 +1,49 @@
+&General
+
+Inundation_ref_source = GIEMS_v2_2020
+StreamFlow_ref_source = GRDC
+Evapotranspiration_ref_source = PLUMBER2
+&Inundation
+#GIEMS_v2_2020
+  GIEMS_v2_2020_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/Inundation/GIEMS_v2_2020/regrid_0.25d/
+  GIEMS_v2_2020_TimRes      =  Month         #Day or Month
+  GIEMS_v2_2020_GeoRes      =  0.25
+  GIEMS_v2_2020_DataGroupby =  Year
+  GIEMS_v2_2020_Suffix      =  GIEMS_v2_2020_
+  GIEMS_v2_2020_Prefix      =  
+  GIEMS_v2_2020_Syear       =  1992
+  GIEMS_v2_2020_Eyear       =  2015
+  GIEMS_v2_2020_figplot     =  True
+  GIEMS_v2_2020_varname     =  fldfrc   
+        
+#GIEMS_v2_2021
+  GIEMS_v2_2021_Dir         =  /tera03/zhwei/Validation_Data/geo_obs/Inundation/GIEMS_v2_2020/regrid_0.25d/
+  GIEMS_v2_2021_TimRes      =  Month         #Day or Month
+  GIEMS_v2_2021_GeoRes      =  0.25
+  GIEMS_v2_2021_DataGroupby =  Year
+  GIEMS_v2_2021_Suffix      =  GIEMS_v2_2020_
+  GIEMS_v2_2021_Prefix      =  
+  GIEMS_v2_2021_Syear       =  1992
+  GIEMS_v2_2021_Eyear       =  2015
+  GIEMS_v2_2021_figplot     =  True
+  GIEMS_v2_2021_varname     =  fldfrc       
+/
+
+&StreamFlow
+#GRDC
+  GRDC_Data_type       =  stn
+  GRDC_Dir             =  /tera03/zhwei/Validation_Data/stn_obs/StreamFlow/GRDC
+  GRDC_Max_UpArea      =  50000000000.0  #km2, upstream area
+  GRDC_Min_UpArea      =  1000.0  #km2, upstream area
+  GRDC_Pltstn          =  True
+  GRDC_varname         =  discharge         
+/
+
+&Evapotranspiration
+#PLUMBER2
+  PLUMBER2_Data_type   =  stn
+  PLUMBER2_Dir         =  /tera03/zhwei/Validation_Data/stn_obs/Evapotranspiration/GLEAM_hybird_PLUMBER2/
+  PLUMBER2_Pltstn      =  True
+  PLUMBER2_varname     =  Qle_cor
+  PLUMBER2_FULLLIST    = /tera03/zhwei/Validation_Data/stn_obs/FLUXNET/FLUXNET_PLUMBER2/list/LIST_FLUXNET_PLUMBER2_FULL.csv
+/
